@@ -2,7 +2,7 @@
 # Build with: docker buildx bake
 #
 group "default" {
-    targets = ["ubuntu-dev", "ubuntu-dev-lts"]
+    targets = ["ubuntu-dev", "ubuntu-dev-lts", "ubuntu-dev-non-root", "ubuntu-dev-lts-non-root"]
 }
 
 target "common" {
@@ -28,5 +28,30 @@ target "ubuntu-dev-lts" {
     args = {
         BASE_IMAGE = "ubuntu:latest"
     }
-    tags = ["skrysm/ubuntu-dev:latest-lts"]
+    tags = ["skrysm/ubuntu-dev:lts"]
+}
+
+target "ubuntu-dev-non-root" {
+    inherits  = ["common"]  # inherit common settings
+
+    dockerfile = "images/ubuntu-dev/Dockerfile"
+    args = {
+        USE_NON_ROOT = "true"
+        USER_NAME    = "dev"
+        HOME_DIR     = "/home/dev"
+    }
+    tags = ["skrysm/ubuntu-dev:non-root"]
+}
+
+target "ubuntu-dev-lts-non-root" {
+    inherits  = ["common"]  # inherit common settings
+
+    dockerfile = "images/ubuntu-dev/Dockerfile"
+    args = {
+        BASE_IMAGE   = "ubuntu:latest"
+        USE_NON_ROOT = "true"
+        USER_NAME    = "dev"
+        HOME_DIR     = "/home/dev"
+    }
+    tags = ["skrysm/ubuntu-dev:lts-non-root"]
 }

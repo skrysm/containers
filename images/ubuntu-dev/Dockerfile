@@ -9,6 +9,11 @@
 ARG BASE_IMAGE=ubuntu:rolling
 FROM ${BASE_IMAGE}
 
+# NOTE: These args must be after(!) the FROM directive (or else they won't be available below).
+ARG USE_NON_ROOT=false
+ARG USER_NAME=root
+ARG HOME_DIR=/root
+
 # Set environment variable to skip interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -31,10 +36,22 @@ RUN apt-get install -y \
         man-db \
         # For oh-my-zsh and general dev purposes
         git \
-        command-not-found
+        command-not-found \
+        # For non-root users
+        sudo
 
 # Re-run for "command-not-found"
 RUN apt-get update
+
+RUN if [ "$USE_NON_ROOT" = "true" ]; then \
+        useradd -m -s /bin/zsh "$USER_NAME" && \
+        usermod -aG sudo "$USER_NAME" && \
+        echo "$USER_NAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers; \
+    fi
+
+# Switch to non-root user, if non-root user is used.
+USER ${USER_NAME}
+WORKDIR ${HOME_DIR}
 
 # Set nano as default editor.
 ENV EDITOR=nano
@@ -43,9 +60,7 @@ ENV EDITOR=nano
 RUN sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)" "" --unattended
 
 # Add customization for zsh
-COPY --chown=root:root --chmod=600 ./shared/oh-my-zsh/.zshrc /root/
+COPY --chown=$USER_NAME:$USER_NAME --chmod=600 ./shared/oh-my-zsh/.zshrc $HOME_DIR/.zshrc
 
 # Run zsh as default shell
 CMD ["zsh"]
-
-WORKDIR /root/
