@@ -2,7 +2,7 @@
 # Build with: docker buildx bake
 #
 group "default" {
-    targets = ["ubuntu-dev"]
+    targets = ["ubuntu-dev", "ubuntu-dev-lts"]
 }
 
 target "common" {
@@ -19,4 +19,14 @@ target "ubuntu-dev" {
     # NOTE: We only use "latest" as tag as users will always want to use the latest (and thus only) image.
     #   There should be no point in using an older image. Also, this way we don't need to cleanup old images.
     tags       = ["skrysm/ubuntu-dev:latest"]
+}
+
+target "ubuntu-dev-lts" {
+    inherits  = ["common"]  # inherit common settings
+
+    dockerfile = "images/ubuntu-dev/Dockerfile"
+    args = {
+        BASE_IMAGE = "ubuntu:latest"
+    }
+    tags = ["skrysm/ubuntu-dev:latest-lts"]
 }

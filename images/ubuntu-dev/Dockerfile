@@ -6,7 +6,8 @@
 #
 
 # NOTE: Tag "rolling" is actually the latest version. Tag "latest" points to the latest "LTS" version.
-FROM ubuntu:rolling
+ARG BASE_IMAGE=ubuntu:rolling
+FROM ${BASE_IMAGE}
 
 # Set environment variable to skip interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
