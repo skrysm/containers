@@ -30,7 +30,11 @@ RUN apt-get install -y \
         less \
         man-db \
         # For oh-my-zsh and general dev purposes
-        git
+        git \
+        command-not-found
+
+# Re-run for "command-not-found"
+RUN apt-get update
 
 # Set nano as default editor.
 ENV EDITOR=nano
@@ -39,7 +43,9 @@ ENV EDITOR=nano
 RUN sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)" "" --unattended
 
 # Add customization for zsh
-COPY --chown=root:root ./shared/oh-my-zsh/customizations.zsh /root/.oh-my-zsh/custom/
+COPY --chown=root:root --chmod=600 ./shared/oh-my-zsh/.zshrc /root/
 
 # Run zsh as default shell
 CMD ["zsh"]
+
+WORKDIR /root/
