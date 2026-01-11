@@ -13,7 +13,7 @@ FROM ${BASE_IMAGE}
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Disable installing recommended and suggested packages via apt/apt-get.
-COPY --chown=root:root ./shared/apt/99-no-recommends /etc/apt/apt.conf.d/
+COPY --chown=root:root --chmod=644 ./shared/apt/99-no-recommends /etc/apt/apt.conf.d/
 
 # NOTE: We keep the update list so that users can more easily install new software.
 RUN apt-get update
