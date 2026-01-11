@@ -24,7 +24,8 @@ COPY --chown=root:root --chmod=644 ./shared/apt/99-no-recommends /etc/apt/apt.co
 RUN apt-get update
 
 # Install tools
-RUN apt-get install -y \
+RUN apt-get update && \
+    apt-get install -y \
         # Required for proper HTTPS
         ca-certificates \
         curl \
@@ -38,10 +39,10 @@ RUN apt-get install -y \
         git \
         command-not-found \
         # For non-root users
-        sudo
-
-# Re-run for "command-not-found"
-RUN apt-get update
+        sudo \
+        && \
+    # Re-run for "command-not-found"
+    apt-get update
 
 RUN if [ "$USE_NON_ROOT" = "true" ]; then \
         useradd -m -s /bin/zsh "$USER_NAME" && \
