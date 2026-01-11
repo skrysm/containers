@@ -3,6 +3,8 @@ name: Build and Push to Docker Hub
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -33,24 +35,23 @@ jobs:
       #   https://github.com/docker/build-push-action/issues/820#issuecomment-1482113833) but provenance improves
       #   the "trustworthiness" of the image. So, I'd rather leave it on.
       - name: Log in to Docker Hub
+        if: ${{ github.event_name != 'pull_request' }}
         uses: docker/login-action@v3
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and Push multi-arch image
-        uses: docker/build-push-action@v6
+        uses: docker/bake-action@v5
         with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          push: true
-          # NOTE: We only use "latest" as tag as users will always want to use the latest (and thus only) image.
-          #   There should be no point in using an older image. Also, this way we don't need to cleanup old images.
-          tags:  ${{ vars.DOCKERHUB_USERNAME }}/${{ env.CONTAINER_NAME }}:latest
+          push: ${{ github.event_name != 'pull_request' }}
+          set: |
+            *.platform=linux/amd64,linux/arm64
 
       # Uses the repo's README to update the overview on DockerHub.
       # NOTE: Requires a Docker Hub token with "Read, Write, Delete" rights.
       - name: Update Docker Hub description
+        if: ${{ github.event_name != 'pull_request' }}
         uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5.0.0
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}

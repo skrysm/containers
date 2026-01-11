@@ -4,7 +4,8 @@
 		"Buildx",
 		"editorconfig",
 		"krys",
-		"markdownlint"
+		"markdownlint",
+		"skrysm"
 	],
 
 	"markdownlint.config": {
