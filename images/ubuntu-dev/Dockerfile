@@ -12,7 +12,7 @@ FROM ubuntu:rolling
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Disable installing recommended and suggested packages via apt/apt-get.
-COPY --chown=root:root ./files/apt/99-no-recommends /etc/apt/apt.conf.d/
+COPY --chown=root:root ./shared/apt/99-no-recommends /etc/apt/apt.conf.d/
 
 # NOTE: We keep the update list so that users can more easily install new software.
 RUN apt-get update
@@ -38,7 +38,7 @@ ENV EDITOR=nano
 RUN sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)" "" --unattended
 
 # Add customization for zsh
-COPY --chown=root:root ./files/oh-my-zsh/customizations.zsh /root/.oh-my-zsh/custom/
+COPY --chown=root:root ./shared/oh-my-zsh/customizations.zsh /root/.oh-my-zsh/custom/
 
 # Run zsh as default shell
 CMD ["zsh"]
