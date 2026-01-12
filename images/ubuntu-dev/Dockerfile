@@ -9,11 +9,6 @@
 ARG BASE_IMAGE=ubuntu:rolling
 FROM ${BASE_IMAGE}
 
-# NOTE: These args must be after(!) the FROM directive (or else they won't be available below).
-ARG USE_NON_ROOT=false
-ARG USER_NAME=root
-ARG HOME_DIR=/root
-
 # Set environment variable to skip interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -43,6 +38,13 @@ RUN apt-get update && \
         && \
     # Re-run for "command-not-found"
     apt-get update
+
+# NOTE: These args must be after(!) the FROM directive (or else they won't be available below).
+# IMPORTANT: These must be as late as possible because "docker buildx bake" can't share layers
+#   where these values are different. So they should explicitly be after(!) the "apt-get" stuff above.
+ARG USE_NON_ROOT=false
+ARG USER_NAME=root
+ARG HOME_DIR=/root
 
 RUN if [ "$USE_NON_ROOT" = "true" ]; then \
         useradd -m -s /bin/zsh "$USER_NAME" && \
