@@ -18,7 +18,7 @@ ARG HOME_DIR=/root
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Disable installing recommended and suggested packages via apt/apt-get.
-COPY --chown=root:root --chmod=644 ./shared/apt/99-no-recommends /etc/apt/apt.conf.d/
+COPY --from=shared --chown=root:root --chmod=644 /apt/99-no-recommends /etc/apt/apt.conf.d/
 
 # NOTE: We keep the update list so that users can more easily install new software.
 RUN apt-get update
@@ -61,7 +61,7 @@ ENV EDITOR=nano
 RUN sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)" "" --unattended
 
 # Add customization for zsh
-COPY --chown=$USER_NAME:$USER_NAME --chmod=600 ./shared/oh-my-zsh/.zshrc $HOME_DIR/.zshrc
+COPY --from=shared --chown=$USER_NAME:$USER_NAME --chmod=600 /oh-my-zsh/.zshrc $HOME_DIR/.zshrc
 
 # Run zsh as default shell
 CMD ["zsh"]
