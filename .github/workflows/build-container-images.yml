@@ -52,10 +52,12 @@ jobs:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and Push multi-arch image
+      # NOTE: Targets are built in parallel (see: https://manpages.debian.org/testing/docker-buildx/docker-buildx-bake.1.en.html).
+      - name: Build Container Images with Bake
         uses: docker/bake-action@v5
         with:
           push: ${{ github.event_name != 'pull_request' }}
+          # Override platform to build multi-platform.
           set: |
             *.platform=linux/amd64,linux/arm64
 
