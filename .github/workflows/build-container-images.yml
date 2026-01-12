@@ -4,8 +4,18 @@ run-name: ${{ github.event_name == 'pull_request' && 'Build only (no push)' || '
 on:
   push:
     branches: [ main ]
+    paths:
+      - images/**
+      - shared/**
+      - .github/workflows/build-container-images.yml
+      - docker-bake.hcl
   pull_request:
     branches: [ main ]
+    paths:
+      - images/**
+      - shared/**
+      - .github/workflows/build-container-images.yml
+      - docker-bake.hcl
   workflow_dispatch:
 
 jobs:
