@@ -11,7 +11,7 @@ group "default" {
         "ubuntu-dev",
         "ubuntu-dev-lts",
         "ubuntu-dev-non-root",
-        "ubuntu-dev-lts-non-root"
+        "ubuntu-dev-lts-non-root",
     ]
 }
 
