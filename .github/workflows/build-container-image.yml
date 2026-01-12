@@ -1,4 +1,5 @@
 name: Build and Push to Docker Hub
+run-name: ${{ github.event_name == 'pull_request' && 'Build (no push)' || 'Build and Push' }}
 
 on:
   push:
