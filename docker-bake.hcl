@@ -1,8 +1,18 @@
 #
 # Build with: docker buildx bake
 #
+# See: https://docs.docker.com/build/bake/introduction/
+# Reference: https://docs.docker.com/build/bake/reference/
+#
 group "default" {
-    targets = ["ubuntu-dev", "ubuntu-dev-lts", "ubuntu-dev-non-root", "ubuntu-dev-lts-non-root"]
+    # NOTE: Unfortunately, the "targets" element doesn't support wildcards. So all targets
+    #   must be listed explicitly.
+    targets = [
+        "ubuntu-dev",
+        "ubuntu-dev-lts",
+        "ubuntu-dev-non-root",
+        "ubuntu-dev-lts-non-root"
+    ]
 }
 
 target "common" {
