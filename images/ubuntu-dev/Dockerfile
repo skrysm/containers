@@ -37,7 +37,8 @@ RUN apt-get update && \
         sudo \
         && \
     # Re-run for "command-not-found"
-    apt-get update
+    # NOTE: This requires retries as it "often" fails with "Mirror sync in progress?" otherwise.
+    apt-get update -o Acquire::Retries=5
 
 # NOTE: These args must be after(!) the FROM directive (or else they won't be available below).
 # IMPORTANT: These must be as late as possible because "docker buildx bake" can't share layers
