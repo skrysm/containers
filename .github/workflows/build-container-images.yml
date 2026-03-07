@@ -38,7 +38,7 @@ jobs:
 
       # Recommended for building multi-arch images
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       # NOTE: We use Docker Hub rather than GitHub's container registry because the docker/build-push-action action
       #   apparently produces container images that GitHub's container registry doesn't fully support (it will result
